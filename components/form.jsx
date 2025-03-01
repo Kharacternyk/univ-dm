@@ -10,7 +10,12 @@ export const Form = () => {
 
   return (
     <Stack>
-      <TextField value={data} onChange={textHandler} placeholder="Data" />
+      <TextField
+        value={data}
+        onChange={textHandler}
+        placeholder="Data"
+        multiline
+      />
     </Stack>
   );
 };
