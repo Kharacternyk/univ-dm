@@ -47,3 +47,14 @@ test("too short rows are reported", () => {
 
   expect(() => parseData(stringData)).toThrow(ParseError);
 });
+
+test("one dimensional data is reported", () => {
+  const stringData = `
+    1
+    4
+    7
+    1
+  `;
+
+  expect(() => parseData(stringData)).toThrow(ParseError);
+});
