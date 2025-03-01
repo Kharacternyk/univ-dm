@@ -1,5 +1,5 @@
 import {Alert, Button, Stack, TextField} from "@mui/material";
-import {useCallback, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import Plot from "react-plotly.js";
 import {parseData, ParseError} from "../lib/parse-data";
 
@@ -7,7 +7,6 @@ export const Form = () => {
   const [input, setInput] = useState("");
   const [data, setData] = useState(null);
   const [message, setMessage] = useState(null);
-  const [plot, setPlot] = useState(null);
 
   const inputHandler = useCallback((event) => {
     setInput(event.target.value);
@@ -28,6 +27,12 @@ export const Form = () => {
 
     setData(data);
     setMessage(null);
+  }, [input]);
+
+  const plot = useMemo(() => {
+    if (data === null) {
+      return null;
+    }
 
     const columnCount = data[0].length;
     const plotData = [];
@@ -57,8 +62,8 @@ export const Form = () => {
       }
     }
 
-    setPlot(<Plot data={plotData} />);
-  }, [input]);
+    return <Plot data={plotData} />;
+  }, [data]);
 
   return (
     <Stack gap={2} width="100%">
