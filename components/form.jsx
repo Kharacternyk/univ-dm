@@ -1,21 +1,43 @@
-import {Stack, TextField} from "@mui/material";
+import {Alert, Button, Stack, TextField} from "@mui/material";
 import {useCallback, useState} from "react";
+import {parseData, ParseError} from "../lib/parse-data";
 
 export const Form = () => {
-  const [data, setData] = useState("");
+  const [input, setInput] = useState("");
+  const [data, setData] = useState(null);
+  const [message, setMessage] = useState(null);
 
-  const textHandler = useCallback((event) => {
-    setData(event.target.value);
+  const inputHandler = useCallback((event) => {
+    setInput(event.target.value);
   }, []);
+  const parseHandler = useCallback(() => {
+    let data;
+
+    try {
+      data = parseData(input);
+    } catch (error) {
+      if (error instanceof ParseError) {
+        setMessage(<Alert severity="error">{error.message}</Alert>);
+        return;
+      } else {
+        throw error;
+      }
+    }
+
+    setData(data);
+    setMessage(null);
+  }, [input]);
 
   return (
-    <Stack>
+    <Stack gap={2}>
       <TextField
-        value={data}
-        onChange={textHandler}
+        value={input}
+        onChange={inputHandler}
         placeholder="Data"
         multiline
       />
+      {message}
+      <Button onClick={parseHandler}>Parse</Button>
     </Stack>
   );
 };
