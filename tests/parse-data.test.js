@@ -17,7 +17,7 @@ test("valid data is parsed", () => {
   ]);
 });
 
-test("invalid values are reported", () => {
+test("invalid values are rejected", () => {
   const stringData = `
     1  2
     8b 8
@@ -26,7 +26,7 @@ test("invalid values are reported", () => {
   expect(() => parseData(stringData)).toThrow(ParseError);
 });
 
-test("too long rows are reported", () => {
+test("too long rows are rejected", () => {
   const stringData = `
     1 2 3
     4 5 6
@@ -37,7 +37,7 @@ test("too long rows are reported", () => {
   expect(() => parseData(stringData)).toThrow(ParseError);
 });
 
-test("too short rows are reported", () => {
+test("too short rows are rejected", () => {
   const stringData = `
     1 2 3
     4 5
@@ -48,12 +48,19 @@ test("too short rows are reported", () => {
   expect(() => parseData(stringData)).toThrow(ParseError);
 });
 
-test("one dimensional data is reported", () => {
+test("one dimensional rows are rejected", () => {
   const stringData = `
     1
     4
     7
     1
+  `;
+
+  expect(() => parseData(stringData)).toThrow(ParseError);
+});
+
+test("emtpy data is rejected", () => {
+  const stringData = `
   `;
 
   expect(() => parseData(stringData)).toThrow(ParseError);
