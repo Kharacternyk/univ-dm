@@ -13,9 +13,9 @@ export const App = () => {
     <StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Stack alignItems="center">
+        <Stack p={2} alignItems="center" width="100%">
           <Paper elevation={2} sx={paperStyle}>
-            <Stack p={2} alignItems="center">
+            <Stack p={2} alignItems="center" width="100%">
               <h1>Data Mining</h1>
               <Form />
             </Stack>
@@ -32,4 +32,4 @@ const theme = createTheme({
   },
 });
 
-const paperStyle = { m: 2 };
+const paperStyle = { width: "min(100%, 42em)" };
