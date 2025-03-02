@@ -1,24 +1,30 @@
 import {Alert, Button, ButtonGroup, Stack, TextField} from "@mui/material";
 import {useCallback, useMemo, useState} from "react";
-import {parseData, ParseError} from "../lib/parse-data";
+import {parseData, ParseError, parseQuery} from "../lib/parse-data";
 import {Plot} from "./plot";
 
 export const Form = () => {
-  const [input, setInput] = useState("");
+  const [dataInput, setDataInput] = useState("");
   const [data, setData] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [dataMessage, setDataMessage] = useState(null);
+  const [queryInput, setQueryInput] = useState("");
+  const [query, setQuery] = useState(null);
+  const [queryMessage, setQueryMessage] = useState(null);
 
-  const inputHandler = useCallback((event) => {
-    setInput(event.target.value);
+  const dataInputHandler = useCallback((event) => {
+    setDataInput(event.target.value);
+  }, []);
+  const queryInputHandler = useCallback((event) => {
+    setQueryInput(event.target.value);
   }, []);
   const parseHandler = useCallback(() => {
     let data;
 
     try {
-      data = parseData(input);
+      data = parseData(dataInput);
     } catch (error) {
       if (error instanceof ParseError) {
-        setMessage(<Alert severity="error">{error.message}</Alert>);
+        setDataMessage(<Alert severity="error">{error.message}</Alert>);
         return;
       } else {
         throw error;
@@ -26,10 +32,29 @@ export const Form = () => {
     }
 
     setData(data);
-    setMessage(null);
-  }, [input]);
+    setQuery(null);
+    setDataMessage(null);
+    setQueryMessage(null);
+  }, [dataInput]);
+  const classifyHandler = useCallback(() => {
+    let query;
+
+    try {
+      query = parseQuery(queryInput, data[0].length - 1);
+    } catch (error) {
+      if (error instanceof ParseError) {
+        setQueryMessage(<Alert severity="error">{error.message}</Alert>);
+        return;
+      } else {
+        throw error;
+      }
+    }
+
+    setQuery(query);
+    setQueryMessage(null);
+  }, [queryInput, data]);
   const presetHandlers = presets.map(
-    (preset) => useCallback(() => setInput(preset.trim())),
+    (preset) => useCallback(() => setDataInput(preset.trim())),
     []
   );
   const presetButtons = useMemo(() =>
@@ -43,15 +68,24 @@ export const Form = () => {
   return (
     <Stack gap={2} width="100%">
       <TextField
-        value={input}
-        onChange={inputHandler}
+        value={dataInput}
+        onChange={dataInputHandler}
         placeholder="Data"
         multiline
       />
-      {message}
+      {dataMessage}
       <ButtonGroup fullWidth>{presetButtons}</ButtonGroup>
       <Button onClick={parseHandler}>Parse</Button>
-      <Plot data={data} />
+      <Plot data={data} query={query} />
+      <TextField
+        value={queryInput}
+        onChange={queryInputHandler}
+        placeholder="Query"
+      />
+      {queryMessage}
+      <Button onClick={classifyHandler} disabled={data === null}>
+        Classify
+      </Button>
     </Stack>
   );
 };

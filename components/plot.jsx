@@ -1,7 +1,7 @@
 import {memo} from "react";
 import Plotly from "react-plotly.js";
 
-export const Plot = memo(({ data }) => {
+export const Plot = memo(({ data, query }) => {
   if (data === null) {
     return null;
   }
@@ -32,6 +32,16 @@ export const Plot = memo(({ data }) => {
     if (columnCount > 3) {
       plotData[label].z.push(row[2]);
     }
+  }
+
+  if (query !== null) {
+    plotData[plotData.length] = {
+      x: [query[0]],
+      y: columnCount > 2 ? [query[1]] : undefined,
+      z: columnCount > 3 ? [query[2]] : undefined,
+      mode: "markers",
+      type: columnCount > 3 ? "scatter3d" : columnCount > 2 ? "scatter" : "bar",
+    };
   }
 
   return <Plotly data={plotData} />;
