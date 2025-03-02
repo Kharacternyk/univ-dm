@@ -52,7 +52,6 @@ export const Plot = memo(({ data, query }) => {
 const commonPlotData = {
   mode: "markers",
   marker: {
-    size: 6,
-    opacity: 0.75,
+    opacity: 0.6,
   },
 };
