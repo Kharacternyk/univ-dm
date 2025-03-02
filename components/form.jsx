@@ -1,5 +1,5 @@
-import {Alert, Button, Stack, TextField} from "@mui/material";
-import {useCallback, useState} from "react";
+import {Alert, Button, ButtonGroup, Stack, TextField} from "@mui/material";
+import {useCallback, useMemo, useState} from "react";
 import {parseData, ParseError} from "../lib/parse-data";
 import {Plot} from "./plot";
 
@@ -28,6 +28,17 @@ export const Form = () => {
     setData(data);
     setMessage(null);
   }, [input]);
+  const presetHandlers = presets.map(
+    (preset) => useCallback(() => setInput(preset.trim())),
+    []
+  );
+  const presetButtons = useMemo(() =>
+    presetHandlers.map((handler, index) => (
+      <Button onClick={handler} key={index}>
+        Preset {index + 1}
+      </Button>
+    ))
+  );
 
   return (
     <Stack gap={2} width="100%">
@@ -38,8 +49,60 @@ export const Form = () => {
         multiline
       />
       {message}
+      <ButtonGroup fullWidth>{presetButtons}</ButtonGroup>
       <Button onClick={parseHandler}>Parse</Button>
       <Plot data={data} />
     </Stack>
   );
 };
+
+const presets = [
+  `
+0 1 2 1
+1 0 1 1
+0 1 1 0
+0 0 1 1
+0 0 1 1
+1 1 2 0
+1 0 2 1
+1 0 0 0
+0 0 0 0
+0 0 1 1
+  `,
+  `
+0 1 2 1
+1 0 1 0
+0 1 1 1
+0 0 1 1
+0 0 2 1
+1 1 2 1
+1 0 2 0
+1 0 0 1
+0 0 0 0
+0 0 1 0
+  `,
+  `
+0 1 2 0
+1 0 1 0
+0 1 1 0
+0 0 1 0
+0 0 2 1
+1 1 2 1
+1 0 2 1
+1 0 0 1
+0 0 0 0
+0 0 1 1
+  `,
+  `
+0 1 2 0
+1 0 1 0
+0 1 1 0
+0 0 1 1
+0 0 2 0
+1 1 2 1
+1 0 2 1
+1 0 0 1
+0 0 0 0
+0 0 1 1
+  `,
+];
