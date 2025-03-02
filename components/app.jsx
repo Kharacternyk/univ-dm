@@ -16,7 +16,7 @@ export const App = () => {
         <Stack p={2} alignItems="center" width="100%">
           <Paper elevation={2} sx={paperStyle}>
             <Stack p={2} alignItems="center" width="100%">
-              <h1>Data Mining</h1>
+              <h1>Data Mining Lab 1</h1>
               <Form />
             </Stack>
           </Paper>
