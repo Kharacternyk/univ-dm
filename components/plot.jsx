@@ -17,9 +17,10 @@ export const Plot = memo(({ data, query }) => {
         x: [],
         y: columnCount > 2 ? [] : undefined,
         z: columnCount > 3 ? [] : undefined,
-        mode: "markers",
         type:
           columnCount > 3 ? "scatter3d" : columnCount > 2 ? "scatter" : "bar",
+        name: `Class ${label}`,
+        ...commonPlotData,
       };
     }
 
@@ -39,10 +40,19 @@ export const Plot = memo(({ data, query }) => {
       x: [query[0]],
       y: columnCount > 2 ? [query[1]] : undefined,
       z: columnCount > 3 ? [query[2]] : undefined,
-      mode: "markers",
+      name: "Query",
       type: columnCount > 3 ? "scatter3d" : columnCount > 2 ? "scatter" : "bar",
+      ...commonPlotData,
     };
   }
 
   return <Plotly data={plotData} />;
 });
+
+const commonPlotData = {
+  mode: "markers",
+  marker: {
+    size: 6,
+    opacity: 0.75,
+  },
+};
