@@ -1,5 +1,8 @@
 import {Alert, Button, ButtonGroup, Stack, TextField} from "@mui/material";
 import {useCallback, useMemo, useState} from "react";
+import {KnnModel} from "../lib/knn-model";
+import {NaiveBayesModel} from "../lib/naive-bayes-model";
+import {OneRuleModel} from "../lib/one-rule-model";
 import {parseData, ParseError, parseQuery} from "../lib/parse-data";
 import {Plot} from "./plot";
 
@@ -17,6 +20,7 @@ export const Form = () => {
   const queryInputHandler = useCallback((event) => {
     setQueryInput(event.target.value);
   }, []);
+
   const parseHandler = useCallback(() => {
     let data;
 
@@ -36,6 +40,7 @@ export const Form = () => {
     setDataMessage(null);
     setQueryMessage(null);
   }, [dataInput]);
+
   const classifyHandler = useCallback(() => {
     let query;
 
@@ -53,6 +58,37 @@ export const Form = () => {
     setQuery(query);
     setQueryMessage(null);
   }, [queryInput, data]);
+
+  const models = useMemo(() => {
+    if (data === null) {
+      return null;
+    }
+
+    return [
+      new OneRuleModel(data),
+      new NaiveBayesModel(data, 0.1),
+      new KnnModel(data, 3),
+      new KnnModel(data, 5),
+    ];
+  }, [data]);
+
+  const results = useMemo(() => {
+    if (models === null || query === null) {
+      return null;
+    }
+
+    return (
+      <ul>
+        <li>
+          {models[0].predict(query)} — one-rule, column {models[0].bestColumn}
+        </li>
+        <li>{models[1].predict(query)} — naive Bayes</li>
+        <li>{models[2].predict(query)} — 3-nearest neighbours</li>
+        <li>{models[3].predict(query)} — 5-nearest neighbours</li>
+      </ul>
+    );
+  }, [models, query]);
+
   const presetHandlers = presets.map(
     (preset) => useCallback(() => setDataInput(preset.trim())),
     []
@@ -86,6 +122,7 @@ export const Form = () => {
       <Button onClick={classifyHandler} disabled={data === null}>
         Classify
       </Button>
+      {results}
     </Stack>
   );
 };
