@@ -17,6 +17,15 @@ test("invalid query size is rejected", () => {
   expect(() => parseQuery(stringQuery, 4)).toThrow(ParseError);
 });
 
+test("scalar query is parsed", () => {
+  const stringQuery = `
+    22
+  `;
+  const query = parseQuery(stringQuery, 1);
+
+  expect(query).toEqual([22]);
+});
+
 test("valid data is parsed", () => {
   const stringData = `
     1  2  1
