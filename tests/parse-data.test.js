@@ -1,4 +1,21 @@
-import {parseData, ParseError} from "../lib/parse-data";
+import {parseData, ParseError, parseQuery} from "../lib/parse-data";
+
+test("valid query is parsed", () => {
+  const stringQuery = `
+    1  2  1
+  `;
+  const query = parseQuery(stringQuery, 3);
+
+  expect(query).toEqual([1, 2, 1]);
+});
+
+test("invalid query size is rejected", () => {
+  const stringQuery = `
+    1  2  1
+  `;
+
+  expect(() => parseQuery(stringQuery, 4)).toThrow(ParseError);
+});
 
 test("valid data is parsed", () => {
   const stringData = `
