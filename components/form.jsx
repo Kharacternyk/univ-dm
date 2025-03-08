@@ -82,12 +82,12 @@ export const Form = () => {
     return (
       <ul>
         <li>
-          {models[0].predict(query)} — one-rule, column {models[0].bestColumn}
+          {models[0].predict(query)} — 1-Rule (Column: {models[0].bestColumn})
         </li>
-        <li>{models[1].predict(query)} — naive Bayes</li>
-        <li>{models[2].predict(query)} — decision tree</li>
-        <li>{models[3].predict(query)} — 3-nearest neighbours</li>
-        <li>{models[4].predict(query)} — 5-nearest neighbours</li>
+        <li>{models[1].predict(query)} — Naive Bayes</li>
+        <li>{models[2].predict(query)} — Decision Tree</li>
+        <li>{models[3].predict(query)} — 3-Nearest Neighbours</li>
+        <li>{models[4].predict(query)} — 5-Nearest Neighbours</li>
       </ul>
     );
   }, [models, query]);
